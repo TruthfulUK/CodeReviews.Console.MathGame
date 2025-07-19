@@ -4,12 +4,12 @@ namespace MathGame.TruthfulUK;
 
 internal static class Helpers
 {
-    internal static int[] GenerateNumbers(int maxInt, Enums.GameSelection gameSelection)
+    internal static int[] GenerateNumbers(int maxInt, Enums.GameSelection effectiveSelection)
     {
         Random rand = new Random();
         int numA;
         int numB;
-        if (gameSelection == GameSelection.Division)
+        if (effectiveSelection == GameSelection.Division)
         {
             numA = rand.Next(1, maxInt);
             numB = rand.Next(3, maxInt);
@@ -20,7 +20,7 @@ internal static class Helpers
                 numB = rand.Next(3, maxInt);
             }
         }
-        else if (gameSelection == GameSelection.Subtraction) 
+        else if (effectiveSelection == GameSelection.Subtraction) 
         {      
             numA = rand.Next(1, maxInt);
             numB = rand.Next(1, maxInt);
@@ -30,6 +30,11 @@ internal static class Helpers
                 numA = rand.Next(1, maxInt);
                 numB = rand.Next(1, maxInt);
             }
+        }
+        else if (effectiveSelection == GameSelection.Multiplication)
+        {
+            numA = rand.Next(1, maxInt);
+            numB = rand.Next(1, 12);
         }
         else
         {

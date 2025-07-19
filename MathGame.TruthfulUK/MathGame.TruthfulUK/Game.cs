@@ -1,5 +1,6 @@
 ﻿using MathGame.TruthfulUK.Models;
 using Spectre.Console;
+using System.Diagnostics;
 using System.Numerics;
 using static MathGame.TruthfulUK.Enums;
 
@@ -11,6 +12,8 @@ internal static class Game
     internal static int MaxGameInt;
     internal static int GameScore = 0;
     internal static string GameName = "Default";
+    internal static readonly Random random = new Random();
+    internal static Stopwatch GameTimer = new Stopwatch();
 
     internal static void Play(Enums.GameSelection gameSelection, Enums.GameDifficulty gameDifficulty)
     {
@@ -29,38 +32,56 @@ internal static class Game
 
         Game.GameEnd = false;
         GameName = gameSelection.ToString();
-        while(!Game.GameEnd)
+
+        var allGames = new[]
         {
-            AnsiConsole.MarkupLine($"Game: [red]{gameSelection}[/] | Difficulty: [red]{gameDifficulty}[/] | Score: [red]{GameScore}[/]");
+            GameSelection.Addition,
+            GameSelection.Subtraction,
+            GameSelection.Multiplication,
+            GameSelection.Division
+        };
+
+        var stopwatch = Stopwatch.StartNew();
+
+        while (!Game.GameEnd)
+        {
+            var effectiveGame = gameSelection == GameSelection.Random
+                ? allGames[random.Next(allGames.Length)]
+                : gameSelection;
+
+            AnsiConsole.MarkupLine(
+                    $"Game: [red]{gameSelection}[/] | " +
+                    $"Difficulty: [red]{gameDifficulty}[/] | " +
+                    $"Score: [green]{GameScore}[/]");
+
+
             int calcAnswer = 0;
             int userAnswer = 0;
-            int[] validNumbers = Helpers.GenerateNumbers(MaxGameInt, gameSelection);
+            string gameOperator = "";
+            int[] validNumbers = Helpers.GenerateNumbers(MaxGameInt, effectiveGame);
 
-            switch (gameSelection)
+            switch (effectiveGame)
             {
                 case GameSelection.Addition:
                     calcAnswer = validNumbers[0] + validNumbers[1];
-                    userAnswer = AnsiConsole.Prompt(
-                    new TextPrompt<int>($"What is {validNumbers[0]} + {validNumbers[1]}?"));
+                    gameOperator = "+";
                     break;
                 case GameSelection.Subtraction:
                     calcAnswer = validNumbers[0] - validNumbers[1];
-                    userAnswer = AnsiConsole.Prompt(
-                    new TextPrompt<int>($"What is {validNumbers[0]} - {validNumbers[1]}?"));
+                    gameOperator = "-";
                     break;
                 case GameSelection.Multiplication:
                     calcAnswer = validNumbers[0] * validNumbers[1];
-                    userAnswer = AnsiConsole.Prompt(
-                    new TextPrompt<int>($"What is {validNumbers[0]} * {validNumbers[1]}?"));
+                    gameOperator = "X";
                     break;
                 case GameSelection.Division:
                     calcAnswer = validNumbers[0] / validNumbers[1];
-                    userAnswer = AnsiConsole.Prompt(
-                    new TextPrompt<int>($"What is {validNumbers[0]} / {validNumbers[1]}?"));
-                    break;
-                case GameSelection.Random:
+                    gameOperator = "/";
                     break;
             }
+
+            userAnswer = AnsiConsole.Prompt(
+                    new TextPrompt<int>($"What is {validNumbers[0]} {gameOperator} {validNumbers[1]}?"));
 
             if (Helpers.DetermineOutcome(calcAnswer, userAnswer))
             {
@@ -69,15 +90,18 @@ internal static class Game
             }
             else
             {
-                Game.End();
+                stopwatch.Stop();
+                TimeSpan elapsed = stopwatch.Elapsed;
+                string formattedElapsed = elapsed.ToString(@"mm\:ss");
+                Game.End(formattedElapsed);
             }
         }  
     }
 
-    internal static void End()
+    internal static void End(string roundTimer)
     {
         Game.GameEnd = true;
-        GameRecord gameResult = new GameRecord(GameName, GameScore);
+        GameRecord gameResult = new GameRecord(GameName, GameScore, roundTimer);
         GameState.GameHistory.Add(gameResult);
         GameScore = 0;
     }

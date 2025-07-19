@@ -7,14 +7,12 @@ internal class GameRecord
     public string Game { get; set; }
     public int Score { get; set; }
 
-    internal GameRecord(string game, int score)
+    public string Time {  get; set; }
+
+    internal GameRecord(string game, int score, string time)
     {
         Game = game;
         Score = score;
-    }
-
-    internal void DisplayGame()
-    {
-        AnsiConsole.MarkupLine($"[bold white on red]{Game}[/] \t\t {Score}");
+        Time = time;
     }
 }

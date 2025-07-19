@@ -1,6 +1,5 @@
 ﻿namespace MathGame.TruthfulUK;
 
-using MathGame.TruthfulUK.Models;
 using static MathGame.TruthfulUK.Enums;
 using Spectre.Console;
 
@@ -36,9 +35,7 @@ internal class UserInterface
                     break;
 
             }
-
         }
-
     }
 
     private void PlayGameMenu()
@@ -54,22 +51,33 @@ internal class UserInterface
                 .AddChoices(Enum.GetValues<GameDifficulty>()));
 
         Game.Play(gameSelection, gameDifficulty);
-
     }
 
     private void DisplayHistory()
     {
         var rule = new Rule();
-        AnsiConsole.MarkupLine("[bold black on white]Game\t\t\tScore[/]");
+        var table = new Table();
+
+        AnsiConsole.MarkupLine("[bold black on white]Game History[/]");
         AnsiConsole.Write(rule);
-        foreach (GameRecord game in GameState.GameHistory)
+
+        table.AddColumn("Game");
+        table.AddColumn("Score");
+        table.AddColumn("Time");
+
+        for (int i = 0; i < GameState.GameHistory.Count; i++)
         {
-            game.DisplayGame();
+            table.InsertRow(i, 
+                $"{GameState.GameHistory[i].Game}", 
+                $"{GameState.GameHistory[i].Score}",
+                $"{GameState.GameHistory[i].Time}");
         }
 
+        table.Expand();
+        table.Border(TableBorder.Minimal);
+        AnsiConsole.Write(table);
         AnsiConsole.Write(rule);
         AnsiConsole.MarkupLine("Press [red]Any Key[/] to return to the main menu.");
         Console.ReadKey();
-
     }
 }
