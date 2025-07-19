@@ -1,7 +1,6 @@
 ﻿using MathGame.TruthfulUK.Models;
 using Spectre.Console;
 using System.Diagnostics;
-using System.Numerics;
 using static MathGame.TruthfulUK.Enums;
 
 namespace MathGame.TruthfulUK;
@@ -10,7 +9,7 @@ internal static class Game
 {
     internal static bool GameEnd;
     internal static int MaxGameInt;
-    internal static int GameScore = 0;
+    internal static int GameScore;
     internal static string GameName = "Default";
     internal static readonly Random random = new Random();
     internal static Stopwatch GameTimer = new Stopwatch();
@@ -53,7 +52,6 @@ internal static class Game
                     $"Game: [red]{gameSelection}[/] | " +
                     $"Difficulty: [red]{gameDifficulty}[/] | " +
                     $"Score: [green]{GameScore}[/]");
-
 
             int calcAnswer = 0;
             int userAnswer = 0;

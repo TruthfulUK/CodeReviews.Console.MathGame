@@ -6,7 +6,7 @@ using Spectre.Console;
 
 internal class UserInterface
 {
-    private bool gameExit = false;
+    private bool gameExit;
     internal void MainMenu()
     {
         while (!gameExit)

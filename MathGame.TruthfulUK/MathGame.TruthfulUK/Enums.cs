@@ -8,7 +8,6 @@ internal class Enums
         GameHistory,
         Quit
     }
-
     internal enum GameSelection
     {
         Addition,
@@ -17,7 +16,6 @@ internal class Enums
         Division,
         Random
     }
-
     internal enum GameDifficulty
     {
         Easy,
