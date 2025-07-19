@@ -1,5 +1,4 @@
 ﻿using Spectre.Console;
-using System.Runtime.CompilerServices;
 
 namespace MathGame.TruthfulUK.Models;
 

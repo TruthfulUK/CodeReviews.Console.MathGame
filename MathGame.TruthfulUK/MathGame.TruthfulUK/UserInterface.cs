@@ -59,12 +59,14 @@ internal class UserInterface
 
     private void DisplayHistory()
     {
+        var rule = new Rule();
+        AnsiConsole.MarkupLine("[bold black on white]Game\t\t\tScore[/]");
+        AnsiConsole.Write(rule);
         foreach (GameRecord game in GameState.GameHistory)
         {
             game.DisplayGame();
         }
 
-        var rule = new Rule();
         AnsiConsole.Write(rule);
         AnsiConsole.MarkupLine("Press [red]Any Key[/] to return to the main menu.");
         Console.ReadKey();
